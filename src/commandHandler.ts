@@ -19,7 +19,9 @@ export default function createCommandHandler(reactotron: any, pluginConfig: Plug
         } else {
           const filteredObj = pathObject(payload.path, cleanedState)
 
-          reactotron.stateKeysResponse(
+          const responseMethod = type === 'state.keys.request' ? reactotron.stateKeysResponse : reactotron.stateValuesResponse
+
+          responseMethod(
             payload.path,
             type === "state.keys.request"
               ? typeof filteredObj === "object"
