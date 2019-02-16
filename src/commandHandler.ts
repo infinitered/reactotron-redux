@@ -8,27 +8,32 @@ export default function createCommandHandler(reactotron: any, pluginConfig: Plug
     switch (type) {
       // client is asking for keys
       case "state.keys.request":
+      case "state.values.request":
         const cleanedState = stateCleaner(reduxStore.getState())
 
         if (!payload.path) {
-          reactotron.stateKeysResponse(null, Object.keys(cleanedState))
+          reactotron.stateKeysResponse(
+            null,
+            type === "state.keys.request" ? Object.keys(cleanedState) : cleanedState
+          )
         } else {
           const filteredObj = pathObject(payload.path, cleanedState)
 
           reactotron.stateKeysResponse(
             payload.path,
-            typeof filteredObj === "object" ? Object.keys(filteredObj) : []
+            type === "state.keys.request"
+              ? typeof filteredObj === "object"
+                ? Object.keys(filteredObj)
+                : undefined
+              : filteredObj
           )
         }
 
         break
 
-      //   // client is asking for values
-      //   case 'state.values.request':
-      //     return requestValues(reduxStore.getState(), reactotron, payload.path)
-
-      //   // client is asking to subscribe to some paths
-      //   case 'state.values.subscribe':
+      // client is asking to subscribe to some paths
+      case "state.values.subscribe":
+        break
       //     subscriptions = pipe(flatten, uniq)(payload.paths)
       //     sendSubscriptions()
       //     return

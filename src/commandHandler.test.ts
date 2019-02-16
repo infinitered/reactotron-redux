@@ -73,7 +73,7 @@ describe("commandHandler", () => {
 
     commandHandler({ type: "state.keys.request", payload: { path: "topLevel.here.nested" } })
 
-    expect(reactotronMock.stateKeysResponse).toHaveBeenCalledWith("topLevel.here.nested", [])
+    expect(reactotronMock.stateKeysResponse).toHaveBeenCalledWith("topLevel.here.nested", undefined)
   })
 
   it("should handle a 'state.keys.request' command type for a path that is invalid", () => {
@@ -88,10 +88,69 @@ describe("commandHandler", () => {
 
     commandHandler({ type: "state.keys.request", payload: { path: "topLevel2.here.nested" } })
 
-    expect(reactotronMock.stateKeysResponse).toHaveBeenCalledWith("topLevel2.here.nested", [])
+    expect(reactotronMock.stateKeysResponse).toHaveBeenCalledWith("topLevel2.here.nested", undefined)
   })
 
-  it.todo("should handle a 'state.values.request' command type")
+  it("should handle a 'state.values.request' command type for a single level", () => {
+    const reactotronMock = {
+      reduxStore: {
+        getState: jest.fn().mockReturnValue({ topLevel: { here: true } }),
+      },
+      stateKeysResponse: jest.fn(),
+    }
+
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+
+    commandHandler({ type: "state.values.request", payload: { path: "topLevel" } })
+
+    expect(reactotronMock.stateKeysResponse).toHaveBeenCalledWith("topLevel", { here: true })
+  })
+
+  it("should handle a 'state.values.request' command type for two levels", () => {
+    const reactotronMock = {
+      reduxStore: {
+        getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+      },
+      stateKeysResponse: jest.fn(),
+    }
+
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+
+    commandHandler({ type: "state.values.request", payload: { path: "topLevel.here" } })
+
+    expect(reactotronMock.stateKeysResponse).toHaveBeenCalledWith("topLevel.here", { nested: true })
+  })
+
+  it("should handle a 'state.values.request' command type for a path that isn't an object", () => {
+    const reactotronMock = {
+      reduxStore: {
+        getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+      },
+      stateKeysResponse: jest.fn(),
+    }
+
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+
+    commandHandler({ type: "state.values.request", payload: { path: "topLevel.here.nested" } })
+
+    expect(reactotronMock.stateKeysResponse).toHaveBeenCalledWith("topLevel.here.nested", true)
+  })
+
+  it("should handle a 'state.values.request' command type for a path that is invalid", () => {
+    const reactotronMock = {
+      reduxStore: {
+        getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+      },
+      stateKeysResponse: jest.fn(),
+    }
+
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+
+    commandHandler({ type: "state.values.request", payload: { path: "topLevel2.here.nested" } })
+
+    expect(reactotronMock.stateKeysResponse).toHaveBeenCalledWith("topLevel2.here.nested", undefined)
+  })
+
   it.todo("should handle a 'state.values.subscribe' command type")
 
   it("should handle a 'state.action.dispatch' command type", () => {
