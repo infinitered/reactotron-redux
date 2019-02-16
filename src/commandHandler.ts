@@ -1,11 +1,27 @@
+import stateCleaner from "./helpers/stateCleaner"
+import pathObject from "./helpers/pathObject"
+
 export default function createCommandHandler(reactotron: any, pluginConfig: PluginConfig) {
   const reduxStore = reactotron.reduxStore
 
   return ({ type, payload }: { type: string; payload?: any }) => {
     switch (type) {
       // client is asking for keys
-      //   case 'state.keys.request':
-      //     return requestKeys(reduxStore.getState(), reactotron, payload.path)
+      case "state.keys.request":
+        const cleanedState = stateCleaner(reduxStore.getState())
+
+        if (!payload.path) {
+          reactotron.stateKeysResponse(null, Object.keys(cleanedState))
+        } else {
+          const filteredObj = pathObject(payload.path, cleanedState)
+
+          reactotron.stateKeysResponse(
+            payload.path,
+            typeof filteredObj === "object" ? Object.keys(filteredObj) : []
+          )
+        }
+
+        break
 
       //   // client is asking for values
       //   case 'state.values.request':
