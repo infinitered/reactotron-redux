@@ -3,6 +3,8 @@ export default function createCustomDispatch(
   store: { dispatch: Function },
   pluginConfig: PluginConfig
 ) {
+  const exceptions = [pluginConfig.restoreActionType, ...(pluginConfig.except || [])]
+
   return (action: any) => {
     // start a timer
     const elapsed = reactotron.startTimer()
@@ -28,22 +30,21 @@ export default function createCustomDispatch(
       }
     }
 
-    // const matchExceptions = any(
-    //   exception => matchException(exception, unwrappedAction.type),
-    //   exceptions
-    // )
+    const isException = exceptions.some(exception =>
+      matchException(exception, unwrappedAction.type)
+    )
 
     // action not blacklisted?
     // if matchException is true, action.type is matched with exception
-    // if (!matchExceptions) {
-    // check if the app considers this important
-    let important = false
-    //   if (trackerOptions && typeof trackerOptions.isActionImportant === 'function') {
-    // important = !!trackerOptions.isActionImportant(unwrappedAction)
-    //   }
+    if (!isException) {
+      // check if the app considers this important
+      let important = false
+      if (pluginConfig && typeof pluginConfig.isActionImportant === "function") {
+        important = !!pluginConfig.isActionImportant(unwrappedAction)
+      }
 
-    reactotron.reportReduxAction(unwrappedAction, ms, important)
-    // }
+      reactotron.reportReduxAction(unwrappedAction, ms, important)
+    }
 
     return result
   }
