@@ -1,7 +1,10 @@
 import stateCleaner from "./helpers/stateCleaner"
 import pathObject from "./helpers/pathObject"
+import createSubscriptionsHandler from "./subscriptionsHandler"
 
 export default function createCommandHandler(reactotron: any, pluginConfig: PluginConfig) {
+  const subscriptionsHandler = createSubscriptionsHandler(reactotron)
+
   const reduxStore = reactotron.reduxStore
 
   return ({ type, payload }: { type: string; payload?: any }) => {
@@ -19,7 +22,10 @@ export default function createCommandHandler(reactotron: any, pluginConfig: Plug
         } else {
           const filteredObj = pathObject(payload.path, cleanedState)
 
-          const responseMethod = type === 'state.keys.request' ? reactotron.stateKeysResponse : reactotron.stateValuesResponse
+          const responseMethod =
+            type === "state.keys.request"
+              ? reactotron.stateKeysResponse
+              : reactotron.stateValuesResponse
 
           responseMethod(
             payload.path,
@@ -35,10 +41,9 @@ export default function createCommandHandler(reactotron: any, pluginConfig: Plug
 
       // client is asking to subscribe to some paths
       case "state.values.subscribe":
+        subscriptionsHandler.setSubscriptions(payload.paths)
+        subscriptionsHandler.sendSubscriptions()
         break
-      //     subscriptions = pipe(flatten, uniq)(payload.paths)
-      //     sendSubscriptions()
-      //     return
 
       // server is asking to dispatch this action
       case "state.action.dispatch":

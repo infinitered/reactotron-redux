@@ -11,7 +11,15 @@ const defaultPluginConfig: PluginConfig = {
 
 describe("commandHandler", () => {
   it("should create a function when called", () => {
-    const commandHandler = createCommandHandler({}, defaultPluginConfig)
+    const reactotronMock = {
+      reduxStore: {
+        getState: jest.fn().mockReturnValue({ topLevel: { here: true } }),
+        subscribe: jest.fn()
+      },
+      stateKeysResponse: jest.fn(),
+    }
+
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
 
     expect(typeof commandHandler).toEqual("function")
   })
@@ -20,6 +28,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: true } }),
+        subscribe: jest.fn()
       },
       stateKeysResponse: jest.fn(),
     }
@@ -35,6 +44,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: true } }),
+        subscribe: jest.fn()
       },
       stateKeysResponse: jest.fn(),
     }
@@ -50,6 +60,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+        subscribe: jest.fn()
       },
       stateKeysResponse: jest.fn(),
     }
@@ -65,6 +76,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+        subscribe: jest.fn()
       },
       stateKeysResponse: jest.fn(),
     }
@@ -80,6 +92,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+        subscribe: jest.fn()
       },
       stateKeysResponse: jest.fn(),
     }
@@ -95,6 +108,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: true } }),
+        subscribe: jest.fn()
       },
       stateValuesResponse: jest.fn(),
     }
@@ -110,6 +124,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+        subscribe: jest.fn()
       },
       stateValuesResponse: jest.fn(),
     }
@@ -125,6 +140,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+        subscribe: jest.fn()
       },
       stateValuesResponse: jest.fn(),
     }
@@ -140,6 +156,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ topLevel: { here: { nested: true } } }),
+        subscribe: jest.fn()
       },
       stateValuesResponse: jest.fn(),
     }
@@ -157,6 +174,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         dispatch: jest.fn(),
+        subscribe: jest.fn()
       },
     }
     const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
@@ -170,6 +188,7 @@ describe("commandHandler", () => {
     const reactotronMock = {
       reduxStore: {
         getState: jest.fn().mockReturnValue({ myState: true }),
+        subscribe: jest.fn()
       },
       send: jest.fn(),
     }
@@ -189,6 +208,7 @@ describe("commandHandler", () => {
       reduxStore: {
         getState: jest.fn(),
         dispatch: jest.fn(),
+        subscribe: jest.fn()
       },
     }
 
