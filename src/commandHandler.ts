@@ -2,12 +2,12 @@ import stateCleaner from "./helpers/stateCleaner"
 import pathObject from "./helpers/pathObject"
 import createSubscriptionsHandler from "./subscriptionsHandler"
 
-export default function createCommandHandler(reactotron: any, pluginConfig: PluginConfig) {
-  const subscriptionsHandler = createSubscriptionsHandler(reactotron)
-
-  const reduxStore = reactotron.reduxStore
+export default function createCommandHandler(reactotron: any, pluginConfig: PluginConfig, onReduxStoreCreation: (func: () => void) => void) {
+  const subscriptionsHandler = createSubscriptionsHandler(reactotron, onReduxStoreCreation)
 
   return ({ type, payload }: { type: string; payload?: any }) => {
+    const reduxStore = reactotron.reduxStore
+
     switch (type) {
       // client is asking for keys
       case "state.keys.request":
@@ -53,14 +53,24 @@ export default function createCommandHandler(reactotron: any, pluginConfig: Plug
       // server is asking to backup state
       case "state.backup.request":
         // run our state through our onBackup
-        const backedUpState = pluginConfig.onBackup(reduxStore.getState())
+        let backedUpState = reduxStore.getState()
+
+        if (pluginConfig.onBackup) {
+          backedUpState = pluginConfig.onBackup(backedUpState)
+        }
+
         reactotron.send("state.backup.response", { state: backedUpState })
         break
 
       // server is asking to clobber state with this
       case "state.restore.request":
         // run our state through our onRestore
-        const restoredState = pluginConfig.onRestore(payload.state, reduxStore.getState())
+        let restoredState = payload.state
+
+        if (pluginConfig.onRestore) {
+          restoredState = pluginConfig.onRestore(payload.state, reduxStore.getState())
+        }
+
         reactotron.reduxStore.dispatch({
           type: pluginConfig.restoreActionType,
           state: restoredState,

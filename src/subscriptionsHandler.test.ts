@@ -11,7 +11,7 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions([])
       handler.sendSubscriptions()
@@ -29,13 +29,33 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions([""])
       handler.sendSubscriptions()
 
       expect(mockReactotron.stateValuesChange).toHaveBeenCalledWith([
-        { path: "", values: mockState },
+        { path: "", value: mockState },
+      ])
+    })
+
+    it("should return an array with a single item with all the store if an null subscription is passed", () => {
+      const mockState = { red1: { test: true }, red2: { test: false } }
+      const mockReactotron = {
+        reduxStore: {
+          getState: jest.fn().mockReturnValue(mockState),
+          subscribe: jest.fn(),
+        },
+        stateValuesChange: jest.fn(),
+      }
+
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
+
+      handler.setSubscriptions([null])
+      handler.sendSubscriptions()
+
+      expect(mockReactotron.stateValuesChange).toHaveBeenCalledWith([
+        { path: null, value: mockState },
       ])
     })
 
@@ -49,13 +69,13 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions(["*"])
       handler.sendSubscriptions()
 
       expect(mockReactotron.stateValuesChange).toHaveBeenCalledWith([
-        { path: "", values: mockState },
+        { path: "", value: mockState },
       ])
     })
 
@@ -69,14 +89,14 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions(["red1.*"])
       handler.sendSubscriptions()
 
       expect(mockReactotron.stateValuesChange).toHaveBeenCalledWith([
-        { path: "red1.test", values: true },
-        { path: "red1.obj", values: { nested: true } },
+        { path: "red1.test", value: true },
+        { path: "red1.obj", value: { nested: true } },
       ])
     })
 
@@ -90,14 +110,14 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions(["red1.obj.*"])
       handler.sendSubscriptions()
 
       expect(mockReactotron.stateValuesChange).toHaveBeenCalledWith([
-        { path: "red1.obj.nested", values: true },
-        { path: "red1.obj.anotherItem", values: 10 },
+        { path: "red1.obj.nested", value: true },
+        { path: "red1.obj.anotherItem", value: 10 },
       ])
     })
 
@@ -111,14 +131,14 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions(["red1.obj.nested", "red1.test"])
       handler.sendSubscriptions()
 
       expect(mockReactotron.stateValuesChange).toHaveBeenCalledWith([
-        { path: "red1.obj.nested", values: true },
-        { path: "red1.test", values: true },
+        { path: "red1.obj.nested", value: true },
+        { path: "red1.test", value: true },
       ])
     })
 
@@ -132,20 +152,20 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions(["red1.obj.nested"])
       handler.sendSubscriptions()
 
       expect(mockReactotron.stateValuesChange).toHaveBeenCalledWith([
-        { path: "red1.obj.nested", values: true },
+        { path: "red1.obj.nested", value: true },
       ])
 
       handler.setSubscriptions(["red1.test"])
       handler.sendSubscriptions()
 
       expect(mockReactotron.stateValuesChange).toHaveBeenCalledWith([
-        { path: "red1.test", values: true },
+        { path: "red1.test", value: true },
       ])
     })
   })
@@ -161,7 +181,7 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions([])
       handler.sendSubscriptionsIfNeeded()
@@ -179,7 +199,7 @@ describe("createSubscriptionHandler", () => {
         stateValuesChange: jest.fn(),
       }
 
-      const handler = createSubscriptionHandler(mockReactotron)
+      const handler = createSubscriptionHandler(mockReactotron, () => {})
 
       handler.setSubscriptions([""])
       handler.sendSubscriptionsIfNeeded()

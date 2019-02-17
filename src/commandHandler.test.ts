@@ -19,7 +19,7 @@ describe("commandHandler", () => {
       stateKeysResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     expect(typeof commandHandler).toEqual("function")
   })
@@ -33,7 +33,7 @@ describe("commandHandler", () => {
       stateKeysResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.keys.request", payload: { path: "" } })
 
@@ -49,7 +49,7 @@ describe("commandHandler", () => {
       stateKeysResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.keys.request", payload: { path: "topLevel" } })
 
@@ -65,7 +65,7 @@ describe("commandHandler", () => {
       stateKeysResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.keys.request", payload: { path: "topLevel.here" } })
 
@@ -81,7 +81,7 @@ describe("commandHandler", () => {
       stateKeysResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.keys.request", payload: { path: "topLevel.here.nested" } })
 
@@ -97,7 +97,7 @@ describe("commandHandler", () => {
       stateKeysResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.keys.request", payload: { path: "topLevel2.here.nested" } })
 
@@ -113,7 +113,7 @@ describe("commandHandler", () => {
       stateValuesResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.values.request", payload: { path: "topLevel" } })
 
@@ -129,7 +129,7 @@ describe("commandHandler", () => {
       stateValuesResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.values.request", payload: { path: "topLevel.here" } })
 
@@ -145,7 +145,7 @@ describe("commandHandler", () => {
       stateValuesResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.values.request", payload: { path: "topLevel.here.nested" } })
 
@@ -161,7 +161,7 @@ describe("commandHandler", () => {
       stateValuesResponse: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.values.request", payload: { path: "topLevel2.here.nested" } })
 
@@ -177,7 +177,7 @@ describe("commandHandler", () => {
         subscribe: jest.fn()
       },
     }
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.action.dispatch", payload: { action: { type: "Do a thing." } } })
 
@@ -193,7 +193,7 @@ describe("commandHandler", () => {
       send: jest.fn(),
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.backup.request" })
 
@@ -212,7 +212,7 @@ describe("commandHandler", () => {
       },
     }
 
-    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig)
+    const commandHandler = createCommandHandler(reactotronMock, defaultPluginConfig, () => {})
 
     commandHandler({ type: "state.restore.request", payload: { state: { myReplacedState: true } } })
 

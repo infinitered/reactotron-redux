@@ -1,7 +1,9 @@
 import pathObject from "./helpers/pathObject"
 
-export default function createSubscriptionHandler(reactotron: any) {
-  const reduxStore = reactotron.reduxStore
+export default function createSubscriptionHandler(
+  reactotron: any,
+  onReduxStoreCreation: (func: () => void) => void
+) {
   let subscriptions: string[] = []
 
   function setSubscriptions(subs: string[]) {
@@ -9,7 +11,7 @@ export default function createSubscriptionHandler(reactotron: any) {
   }
 
   function getChanges() {
-    const state = reduxStore.getState()
+    const state = reactotron.reduxStore.getState()
 
     const changes = []
 
@@ -17,7 +19,7 @@ export default function createSubscriptionHandler(reactotron: any) {
       let cleanedPath = path
       let starredPath = false
 
-      if (path.endsWith("*")) {
+      if (path && path.endsWith("*")) {
         // Handle the star!
         starredPath = true
         cleanedPath = path.substr(0, path.length - 2)
@@ -29,11 +31,11 @@ export default function createSubscriptionHandler(reactotron: any) {
         changes.push(
           ...Object.entries(values).map(val => ({
             path: `${cleanedPath}.${val[0]}`,
-            values: val[1],
+            value: val[1],
           }))
         )
       } else {
-        changes.push({ path: cleanedPath, values })
+        changes.push({ path: cleanedPath, value: values })
       }
     })
 
@@ -53,7 +55,9 @@ export default function createSubscriptionHandler(reactotron: any) {
     }
   }
 
-  reduxStore.subscribe(sendSubscriptionsIfNeeded)
+  onReduxStoreCreation(() => {
+    reactotron.reduxStore.subscribe(sendSubscriptionsIfNeeded)
+  })
 
   return {
     sendSubscriptions,
