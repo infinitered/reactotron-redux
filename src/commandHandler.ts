@@ -75,6 +75,8 @@ export default function createCommandHandler(reactotron: any, pluginConfig: Plug
           type: pluginConfig.restoreActionType,
           state: restoredState,
         })
+
+        break
     }
   }
 }
