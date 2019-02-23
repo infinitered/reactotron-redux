@@ -53,7 +53,7 @@
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-resolve": "^0.0.1-predev.1",
-    "semantic-release": "^15.13.3",
+    "semantic-release": "^16.0.0-beta.18",
     "trash-cli": "^1.4.0",
     "ts-jest": "^23.10.5",
     "typescript": "^3.3.3"
